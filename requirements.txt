@@ -1,0 +1,9 @@
+requests
+tqdm
+PIL
+torch
+numpy
+scikit-image
+roboflow
+groundingdino @ git+https://github.com/chrizandr/GroundingDINO.git
+segment_anything @ git+https://github.com/chrizandr/segment-anything.git
