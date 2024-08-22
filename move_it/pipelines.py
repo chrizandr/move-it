@@ -64,7 +64,7 @@ class InpaintingPipeline:
             inpainting_config (dict): A dictionary containing the configuration parameters for the
                 InpaintingModel.
         """
-        self.seg_pipeline = SegmentationPipeline(**segmentation_config)
+        self.seg_pipeline = SegmentationPipeline(segmentation_config)
         self.model = InpaintingModel(**inpainting_config)
 
     def move_object(self, image_np, mask, x_off, y_off):
