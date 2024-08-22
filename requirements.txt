@@ -1,9 +1,10 @@
-requests
-tqdm
-PIL
-torch
-numpy
-scikit-image
-roboflow
 groundingdino @ git+https://github.com/chrizandr/GroundingDINO.git
-segment_anything @ git+https://github.com/chrizandr/segment-anything.git
+segment_anything @ git+https://github.com/chrizandr/segment-anything.gitrequests==2.32.3
+tqdm==4.66.5
+Pillow==9.4.0
+torch==2.3.1
+torchvision==0.18.1
+numpy==1.26.4
+diffusers==0.30.0
+scikit-image==0.23.2
+roboflow==1.1.41

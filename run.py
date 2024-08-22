@@ -1,5 +1,18 @@
+import os
+import json
 import argparse
+
 from move_it import SegmentationPipeline, InpaintingPipeline
+
+
+HOME = os.getcwd()
+try:
+    segmentation_config = json.read(
+        open(f"{HOME}/configs/segmentation_config.json"))
+    inpainting_config = json.read(
+        open(f"{HOME}/configs/inpainting_config.json"))
+except FileNotFoundError:
+    print("Cannot find config file, please run configure.py")
 
 
 def main():
@@ -18,15 +31,14 @@ def main():
         print(f"Output will be saved to: {args.output}")
     if args.x == 0 and args.y == 0:
         print(f"Performing segmentation for prompt {args.text}")
-        # segment and post output
+        pipeline = SegmentationPipeline(segmentation_config)
+        pipeline.run(args.image, args.output)
         print(f"Output segmentated image saved to: {args.output}")
-        pass
     else:
         print(f"Moving the object {args.text} by x:{args.x} and y:{args.y}")
-        # segment, inpaint and post output
+        pipeline = InpaintingPipeline(segmentation_config, inpainting_config)
+        pipeline.run(args.image, args.output)
         print(f"Modified image saved to: {args.output}")
-        pass
-
 
 
 if __name__ == "__main__":
