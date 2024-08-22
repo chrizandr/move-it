@@ -1,5 +1,6 @@
 groundingdino @ git+https://github.com/chrizandr/GroundingDINO.git
-segment_anything @ git+https://github.com/chrizandr/segment-anything.gitrequests==2.32.3
+segment_anything @ git+https://github.com/chrizandr/segment-anything.git
+requests==2.32.3
 tqdm==4.66.5
 Pillow==9.4.0
 torch==2.3.1
