@@ -10,10 +10,30 @@ HOME = os.getcwd()
 
 
 class SegmentationPipeline:
-    def __init__(self, segmentation_config) -> None:
+    def __init__(self, segmentation_config):
+        """
+        A pipeline for detecting, annotating, and segmenting objects in an image using a segmentation model.
+
+        This class handles the detection of objects in an image based on a text prompt, annotates the
+        detected objects with bounding boxes, segments the objects, and saves the annotated
+        images and segmentation masks.
+
+        Args:
+            segmentation_config(dict): A dictionary containing the configuration parameters for the
+                SegmentationModel.
+        """
         self.model = SegmentationModel(**segmentation_config)
 
     def run(self, image_path, text, output_path):
+        """
+        Runs the segmentation pipeline on the given image, detects and segments objects based on
+        the text prompt, and saves the annotated images.
+
+        Args:
+            image_path(str): The path to the input image file.
+            text(str): The text prompt used to detect objects in the image.
+            output_path(str): The path to save the annotated output image.
+        """
         boxes, logits, phrases, image_np = self.model.detect(
             image_path, text)
 
@@ -30,11 +50,36 @@ class SegmentationPipeline:
 
 
 class InpaintingPipeline:
-    def __init__(self, segmentation_config, inpainting_config) -> None:
+    def __init__(self, segmentation_config, inpainting_config):
+        """
+        A pipeline for detecting, moving, and inpainting objects in an image using segmentation and inpainting models.
+
+        This class combines the functionality of a segmentation model to detect and segment objects,
+        and an inpainting model to move the object within the image and fill the original location with
+        background content.
+
+        Args:
+            segmentation_config (dict): A dictionary containing the configuration parameters for the
+                SegmentationModel.
+            inpainting_config (dict): A dictionary containing the configuration parameters for the
+                InpaintingModel.
+        """
         self.seg_pipeline = SegmentationPipeline(**segmentation_config)
         self.model = InpaintingModel(**inpainting_config)
 
     def move_object(self, image_np, mask, x_off, y_off):
+        """
+        Moves the detected object within the image based on specified offsets.
+
+        Args:
+            image_np(np.ndarray): The original image as a NumPy array.
+            mask(np.ndarray): The binary mask of the object to be moved.
+            x_off(int): The horizontal offset by which to move the object.
+            y_off(int): The vertical offset by which to move the object.
+
+        Returns:
+            np.ndarray: The image with the object moved to the new location.
+        """
         h, w = image_np.shape
 
         cords = (mask > 0).nonzero()
@@ -66,6 +111,16 @@ class InpaintingPipeline:
         return new_image
 
     def run(self, image_path, text, offsets, output_path):
+        """
+        Runs the entire pipeline: detects and segments the object, moves the object within the image,
+        inpaints the original location, and saves the final image.
+
+        Args:
+            image_path(str): The path to the input image file.
+            text(str): The text prompt used to detect objects in the image.
+            offsets(tuple): A tuple containing the x and y offsets for moving the object.
+            output_path(str): The path to save the final output image.
+        """
         mask_img_path = f"{os.path.join(HOME, "logs/mask_" + os.path.basename(image_path))}"
         x_off, y_off = offsets
 
