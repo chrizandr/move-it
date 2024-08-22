@@ -84,7 +84,7 @@ class SegmentationModel:
         Returns:
             torch.Tensor: A tensor containing the segmentation masks.
         """
-        self.sam.set_image(image_np)
+        self.sam.set_image(image_np.copy())
         H, W, _ = image_np.shape
         boxes_xyxy = box_ops.box_cxcywh_to_xyxy(
             boxes) * torch.Tensor([W, H, W, H])
