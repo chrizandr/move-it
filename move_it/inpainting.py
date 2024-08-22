@@ -57,7 +57,7 @@ class InpaintingModel:
 
         return masked_image, box_mask
 
-    def inpaint(self, image_np, mask, rectangle_mask=True):
+    def inpaint(self, image_np, mask, rectangle_mask=True, strength=1):
         """
         Performs inpainting on the image using the specified mask, filling in the masked
         area with content that matches the surrounding background.
@@ -85,7 +85,7 @@ class InpaintingModel:
 
         output = self.pipe(prompt=prompt, image=image,
             mask_image=mask_image,
-            stength=0.5, guidance_scale=10
+            stength=strength, guidance_scale=10
         ).images[0]
 
         return output

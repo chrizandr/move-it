@@ -37,16 +37,17 @@ class SegmentationPipeline:
         boxes, logits, phrases, image_np = self.model.detect(
             image_path, text)
 
-        annotated_box = self.model.annotate_bbox(image_np, boxes, logits, phrases)
+        annotated_box = self.model.annotate_bbox(
+            image_np, boxes, logits, phrases)
         box_pil = Image.fromarray(annotated_box)
         box_pil.save(os.path.join(HOME, "logs/box_" + os.path.basename(image_path)))
 
-        mask = self.model.segment(image_np, boxes)[0][0].cpu.numpy()
+        mask = self.model.segment(image_np, boxes)[0][0]
         annotated_mask = self.model.annotate_mask(mask, image_np)
         mask_pil = Image.fromarray(annotated_mask)
         mask_pil.save(output_path)
 
-        return mask, image_np
+        return mask.cpu().numpy(), image_np
 
 
 class InpaintingPipeline:
@@ -80,7 +81,7 @@ class InpaintingPipeline:
         Returns:
             np.ndarray: The image with the object moved to the new location.
         """
-        h, w = image_np.shape
+        h, w = image_np.shape[:2]
 
         cords = (mask > 0).nonzero()
         x, y = cords[0], cords[1]
@@ -88,7 +89,8 @@ class InpaintingPipeline:
         xmax, ymax = x.max(), y.max()
 
         cropped_object = image_np[xmin:xmax+1, ymin:ymax+1]
-        cropped_mask = mask[xmin:xmax+1, ymin:ymax+1][:, :, None].astype(np.uint8)
+        cropped_mask = mask[xmin:xmax+1, ymin:ymax +
+                            1][:, :, None].astype(np.uint8)
 
         # # Fix rotation and change coords accordingly
         # object_object = rotate(object_object, 10, resize=True, mode='constant', cval=0)
@@ -106,7 +108,7 @@ class InpaintingPipeline:
         masked_object = np.multiply(cropped_object, cropped_mask)
         combined_region = background_region + masked_object
 
-        new_image[x1:x2, y1:y2] = combined_region[0:x2-x1, 0:y2-y1]
+        new_image[x1:x2+1, y1:y2+1] = combined_region[0:x2-x1+1, 0:y2-y1+1]
 
         return new_image
 
@@ -121,11 +123,12 @@ class InpaintingPipeline:
             offsets(tuple): A tuple containing the x and y offsets for moving the object.
             output_path(str): The path to save the final output image.
         """
-        mask_img_path = os.path.join(HOME, "logs/mask_" + os.path.basename(image_path))
+        mask_img_path = os.path.join(HOME, "logs/mask_test.png")
         x_off, y_off = offsets
 
         mask, image_np = self.seg_pipeline.run(image_path, text, mask_img_path)
-        new_image = self.move_object(mask, image_np, x_off, y_off)
+        new_image = self.move_object(image_np, mask, x_off, y_off)
 
-        inpainted_img = self.model.inpaint(new_image, mask, rectangle_mask=True)
+        inpainted_img = self.model.inpaint(
+            new_image, mask, rectangle_mask=True)
         inpainted_img.save(output_path)
