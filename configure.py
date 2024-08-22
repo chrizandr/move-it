@@ -43,8 +43,7 @@ def download_file(url, output_path):
             file.write(data)
             progress_bar.update(len(data))
 
-
-if __name__ == "__main__":
+def main():
     HOME = os.getcwd()
     dino_chkpt = f"{HOME}/weights/groundingdino_swint_ogc.pth"
     dino_config = os.path.join(HOME, "configs/GroundingDINO_SwinT_OGC.py")
@@ -74,3 +73,7 @@ if __name__ == "__main__":
 
     with open(f"{HOME}/configs/inpainting_config.json", "w") as f:
         json.dump(inpaint_config, f, indent=4)
+
+
+if __name__ == "__main__":
+    main()
