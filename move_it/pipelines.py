@@ -41,10 +41,10 @@ class SegmentationPipeline:
         box_pil = Image.fromarray(annotated_box)
         box_pil.save(os.path.join(HOME, "logs/box_" + os.path.basename(image_path)))
 
-        mask = self.model.segment(image_np, boxes)[0][0]
+        mask = self.model.segment(image_np, boxes)[0][0].cpu.numpy()
         annotated_mask = self.model.annotate_mask(mask, image_np)
         mask_pil = Image.fromarray(annotated_mask)
-        box_pil.save(output_path)
+        mask_pil.save(output_path)
 
         return mask, image_np
 
