@@ -34,12 +34,12 @@ def main():
     if args.x == 0 and args.y == 0:
         print(f"Performing segmentation for prompt {args.text}")
         pipeline = SegmentationPipeline(segmentation_config, device)
-        pipeline.run(args.image, args.output)
+        pipeline.run(args.image, args.text, args.output)
         print(f"Output segmentated image saved to: {args.output}")
     else:
         print(f"Moving the object {args.text} by x:{args.x} and y:{args.y}")
         pipeline = InpaintingPipeline(segmentation_config, inpainting_config, device)
-        pipeline.run(args.image, args.output)
+        pipeline.run(args.image, args.text, (args.x, args.y), args.output)
         print(f"Modified image saved to: {args.output}")
 
 

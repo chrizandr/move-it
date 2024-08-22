@@ -108,7 +108,7 @@ class InpaintingPipeline:
         masked_object = np.multiply(cropped_object, cropped_mask)
         combined_region = background_region + masked_object
 
-        new_image[x1:x2+1, y1:y2+1] = combined_region[0:x2-x1+1, 0:y2-y1+1]
+        new_image[x1:x2, y1:y2] = combined_region[0:x2-x1, 0:y2-y1]
 
         return new_image
 
@@ -128,7 +128,7 @@ class InpaintingPipeline:
 
         mask, image_np = self.seg_pipeline.run(image_path, text, mask_img_path)
         new_image = self.move_object(image_np, mask, x_off, y_off)
-
+        Image.fromarray(new_image).save("move_test.png")
         inpainted_img = self.model.inpaint(
-            new_image, mask, rectangle_mask=True)
+            new_image, mask, rectangle_mask=True, strength=1)
         inpainted_img.save(output_path)
