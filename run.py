@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+import torch
 
 from move_it.pipelines import SegmentationPipeline, InpaintingPipeline
 
@@ -26,17 +27,18 @@ def main():
     args = parser.parse_args()
 
     # Example usage of the parsed arguments
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Processing image: {args.image}")
     if args.output:
         print(f"Output will be saved to: {args.output}")
     if args.x == 0 and args.y == 0:
         print(f"Performing segmentation for prompt {args.text}")
-        pipeline = SegmentationPipeline(segmentation_config)
+        pipeline = SegmentationPipeline(segmentation_config, device)
         pipeline.run(args.image, args.output)
         print(f"Output segmentated image saved to: {args.output}")
     else:
         print(f"Moving the object {args.text} by x:{args.x} and y:{args.y}")
-        pipeline = InpaintingPipeline(segmentation_config, inpainting_config)
+        pipeline = InpaintingPipeline(segmentation_config, inpainting_config, device)
         pipeline.run(args.image, args.output)
         print(f"Modified image saved to: {args.output}")
 

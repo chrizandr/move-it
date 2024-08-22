@@ -10,7 +10,7 @@ HOME = os.getcwd()
 
 
 class SegmentationPipeline:
-    def __init__(self, segmentation_config):
+    def __init__(self, segmentation_config, device):
         """
         A pipeline for detecting, annotating, and segmenting objects in an image using a segmentation model.
 
@@ -22,7 +22,7 @@ class SegmentationPipeline:
             segmentation_config(dict): A dictionary containing the configuration parameters for the
                 SegmentationModel.
         """
-        self.model = SegmentationModel(**segmentation_config)
+        self.model = SegmentationModel(device=device, **segmentation_config)
 
     def run(self, image_path, text, output_path):
         """
@@ -50,7 +50,7 @@ class SegmentationPipeline:
 
 
 class InpaintingPipeline:
-    def __init__(self, segmentation_config, inpainting_config):
+    def __init__(self, segmentation_config, inpainting_config, device):
         """
         A pipeline for detecting, moving, and inpainting objects in an image using segmentation and inpainting models.
 
@@ -64,7 +64,7 @@ class InpaintingPipeline:
             inpainting_config (dict): A dictionary containing the configuration parameters for the
                 InpaintingModel.
         """
-        self.seg_pipeline = SegmentationPipeline(segmentation_config)
+        self.seg_pipeline = SegmentationPipeline(segmentation_config, device)
         self.model = InpaintingModel(**inpainting_config)
 
     def move_object(self, image_np, mask, x_off, y_off):
