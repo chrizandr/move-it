@@ -121,7 +121,7 @@ class InpaintingPipeline:
             offsets(tuple): A tuple containing the x and y offsets for moving the object.
             output_path(str): The path to save the final output image.
         """
-        mask_img_path = f"{os.path.join(HOME, "logs/mask_" + os.path.basename(image_path))}"
+        mask_img_path = os.path.join(HOME, "logs/mask_" + os.path.basename(image_path))
         x_off, y_off = offsets
 
         mask, image_np = self.seg_pipeline.run(image_path, text, mask_img_path)
