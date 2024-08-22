@@ -2,14 +2,14 @@ import os
 import json
 import argparse
 
-from move_it import SegmentationPipeline, InpaintingPipeline
+from move_it.pipelines import SegmentationPipeline, InpaintingPipeline
 
 
 HOME = os.getcwd()
 try:
-    segmentation_config = json.read(
+    segmentation_config = json.load(
         open(f"{HOME}/configs/segmentation_config.json"))
-    inpainting_config = json.read(
+    inpainting_config = json.load(
         open(f"{HOME}/configs/inpainting_config.json"))
 except FileNotFoundError:
     print("Cannot find config file, please run configure.py")
