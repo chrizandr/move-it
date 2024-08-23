@@ -44,3 +44,7 @@ python run.py --image ./example.jpg \
 ## Results
 
 Results for the sample images along with a other experiments are present in the [Demo notebook](https://github.com/chrizandr/move_it/blob/main/Demo.ipynb). This also gives relevant code to run the pipelines in python code rather than from the command line.
+
+<a target="_blank" href="https://colab.research.google.com/github/chrizandr/move_it/blob/main/Demo.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
