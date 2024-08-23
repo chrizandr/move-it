@@ -1,0 +1,6 @@
+{
+    "dino_chkpt": "/Users/chris/move_it/weights/groundingdino_swint_ogc.pth",
+    "dino_config": "/Users/chris/move_it/configs/GroundingDINO_SwinT_OGC.py",
+    "sam_config": "vit_h",
+    "sam_chkpt": "/Users/chris/move_it/weights/sam_vit_h_4b8939.pth"
+}
